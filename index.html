@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProductTrack - E-commerce Intelligence Dashboard</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .auth-section {
+            background: white;
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+            text-align: center;
+            max-width: 500px;
+            margin: 4rem auto;
+        }
+
+        .auth-section h2 {
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .filters {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: end;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .stat-card h3 {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .stat-trend {
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .trend-up {
+            color: #10b981;
+        }
+
+        .trend-down {
+            color: #ef4444;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .chart-card h3 {
+            margin-bottom: 1rem;
+            color: #1e293b;
+            font-size: 1.1rem;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-header h3 {
+            color: #1e293b;
+            font-size: 1.1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #f8fafc;
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 1rem;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .rank-badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .rank-1 {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .rank-2-5 {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .rank-6-10 {
+            background: #e0e7ff;
+            color: #4338ca;
+        }
+
+        .rank-11-20 {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .platform-badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+
+        .platform-amazon {
+            background: #fff7ed;
+            color: #c2410c;
+        }
+
+        .platform-firstcry {
+            background: #fef2f2;
+            color: #b91c1c;
+        }
+
+        .rating {
+            color: #f59e0b;
+            font-weight: 600;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #64748b;
+        }
+
+        .spinner {
+            border: 3px solid #f1f5f9;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-weight: 500;
+            color: #64748b;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab:hover {
+            color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .product-link {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .product-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .filters {
+                flex-direction: column;
+            }
+
+            .filter-group {
+                min-width: 100%;
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            th, td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 ProductTrack</h1>
+        <p>E-commerce Intelligence Dashboard - Amazon & Firstcry</p>
+    </div>
+
+    <div id="authSection" class="auth-section">
+        <h2>Connect to Google Sheets</h2>
+        <p style="margin-bottom: 2rem; color: #64748b;">Sign in with Google to access your product data</p>
+        <div id="g_id_onload"
+             data-client_id="260112510191-v1apk72dk0srph3kg80afnc1ohu4hvtb.apps.googleusercontent.com"
+             data-callback="handleCredentialResponse">
+        </div>
+        <div class="g_id_signin" data-type="standard" data-size="large"></div>
+    </div>
+
+    <div id="appContainer" class="container" style="display: none;">
+        <!-- Filters -->
+        <div class="filters">
+            <div class="filter-group">
+                <label>Platform</label>
+                <select id="filterPlatform">
+                    <option value="all">All Platforms</option>
+                    <option value="amazon">Amazon</option>
+                    <option value="firstcry">Firstcry</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Product</label>
+                <select id="filterProduct">
+                    <option value="all">All Products</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Date Range</label>
+                <select id="filterDateRange">
+                    <option value="7">Last 7 Days</option>
+                    <option value="30">Last 30 Days</option>
+                    <option value="90">Last 90 Days</option>
+                    <option value="all">All Time</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <button class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
+            </div>
+            <div class="filter-group">
+                <button class="btn btn-success" onclick="exportToExcel()">📥 Export to Excel</button>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Products Tracked</h3>
+                <div class="stat-value" id="statTotalProducts">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Avg. Rank Position</h3>
+                <div class="stat-value" id="statAvgRank">-</div>
+                <div class="stat-trend" id="statRankTrend"></div>
+            </div>
+            <div class="stat-card">
+                <h3>Avg. Rating</h3>
+                <div class="stat-value" id="statAvgRating">-</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Reviews</h3>
+                <div class="stat-value" id="statTotalReviews">0</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('overview')">Overview</button>
+            <button class="tab" onclick="switchTab('rankings')">Rankings</button>
+            <button class="tab" onclick="switchTab('competitors')">Competitors</button>
+            <button class="tab" onclick="switchTab('trends')">Trends</button>
+        </div>
+
+        <!-- Tab: Overview -->
+        <div id="tab-overview" class="tab-content active">
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3>Rank Distribution</h3>
+                    <canvas id="chartRankDist"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>Platform Performance</h3>
+                    <canvas id="chartPlatform"></canvas>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <h3>Product Summary</h3>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Platform</th>
+                                <th>Best Rank</th>
+                                <th>Price</th>
+                                <th>Rating</th>
+                                <th>Reviews</th>
+                                <th>Last Checked</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableProductSummary"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Rankings -->
+        <div id="tab-rankings" class="tab-content">
+            <div class="table-container">
+                <div class="table-header">
+                    <h3>Recent Rankings</h3>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Product</th>
+                                <th>Platform</th>
+                                <th>Keyword</th>
+                                <th>Rank</th>
+                                <th>Price</th>
+                                <th>Rating</th>
+                                <th>Reviews</th>
+                                <th>Link</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableRankings"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Competitors -->
+        <div id="tab-competitors" class="tab-content">
+            <div class="table-container">
+                <div class="table-header">
+                    <h3>Competitor Analysis</h3>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Platform</th>
+                                <th>Keyword</th>
+                                <th>Rank</th>
+                                <th>Product Title</th>
+                                <th>Price</th>
+                                <th>Rating</th>
+                                <th>Reviews</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableCompetitors"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Trends -->
+        <div id="tab-trends" class="tab-content">
+            <div class="chart-card" style="margin-bottom: 1.5rem;">
+                <h3>Rank Trend Over Time</h3>
+                <canvas id="chartRankTrend"></canvas>
+            </div>
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3>Price Trend</h3>
+                    <canvas id="chartPriceTrend"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>Reviews Growth</h3>
+                    <canvas id="chartReviewsTrend"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ====================================================================
+        // CONFIGURATION
+        // ====================================================================
+        const APP_CONFIG = {
+            SHEET_ID: '1p7_1I_JE6TpH1QdQ8eOU9v7TSi4YvdoPrBGKOAHVQfo',
+            CLIENT_ID: '260112510191-v1apk72dk0srph3kg80afnc1ohu4hvtb.apps.googleusercontent.com'
+        };
+
+        let accessToken = null;
+        let allData = {
+            rankings: [],
+            competitors: [],
+            products: []
+        };
+
+        let charts = {};
+
+        // ====================================================================
+        // AUTHENTICATION
+        // ====================================================================
+        function handleCredentialResponse(response) {
+            accessToken = response.credential;
+            document.getElementById('authSection').style.display = 'none';
+            document.getElementById('appContainer').style.display = 'block';
+            loadData();
+        }
+
+        // ====================================================================
+        // DATA LOADING
+        // ====================================================================
+        async function loadData() {
+            showLoading();
+            try {
+                await Promise.all([
+                    loadSheet('Rankings', 'rankings'),
+                    loadSheet('Competitors', 'competitors'),
+                    loadSheet('Products', 'products')
+                ]);
+                processData();
+                renderDashboard();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                alert('Failed to load data. Please refresh and try again.');
+            }
+        }
+
+        async function loadSheet(sheetName, dataKey) {
+            const range = `${sheetName}!A:Z`;
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${APP_CONFIG.SHEET_ID}/values/${range}`;
+            
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+
+            const data = await response.json();
+            if (data.values && data.values.length > 1) {
+                const headers = data.values[0];
+                const rows = data.values.slice(1);
+                allData[dataKey] = rows.map(row => {
+                    const obj = {};
+                    headers.forEach((header, index) => {
+                        obj[header] = row[index] || '';
+                    });
+                    return obj;
+                });
+            }
+        }
+
+        function showLoading() {
+            document.getElementById('appContainer').innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading your product data...</p>
+                </div>
+            `;
+        }
+
+        // ====================================================================
+        // DATA PROCESSING
+        // ====================================================================
+        function processData() {
+            // Populate product filter
+            const productSelect = document.getElementById('filterProduct');
+            const uniqueProducts = [...new Set(allData.rankings.map(r => r.Product))];
+            uniqueProducts.forEach(product => {
+                const option = document.createElement('option');
+                option.value = product;
+                option.textContent = product;
+                productSelect.appendChild(option);
+            });
+        }
+
+        function getFilteredData() {
+            const platform = document.getElementById('filterPlatform').value;
+            const product = document.getElementById('filterProduct').value;
+            const dateRange = parseInt(document.getElementById('filterDateRange').value);
+
+            let filtered = allData.rankings;
+
+            // Platform filter
+            if (platform !== 'all') {
+                filtered = filtered.filter(r => r.Platform === platform);
+            }
+
+            // Product filter
+            if (product !== 'all') {
+                filtered = filtered.filter(r => r.Product === product);
+            }
+
+            // Date range filter
+            if (dateRange !== 'all') {
+                const cutoffDate = new Date();
+                cutoffDate.setDate(cutoffDate.getDate() - dateRange);
+                filtered = filtered.filter(r => {
+                    const recordDate = new Date(r.Timestamp);
+                    return recordDate >= cutoffDate;
+                });
+            }
+
+            return filtered;
+        }
+
+        // ====================================================================
+        // RENDERING
+        // ====================================================================
+        function renderDashboard() {
+            const data = getFilteredData();
+            
+            // Stats
+            renderStats(data);
+            
+            // Charts
+            renderCharts(data);
+            
+            // Tables
+            renderProductSummary();
+            renderRankingsTable(data);
+            renderCompetitorsTable();
+        }
+
+        function renderStats(data) {
+            // Total products
+            document.getElementById('statTotalProducts').textContent = 
+                allData.products.length;
+
+            // Avg rank
+            const ranks = data.map(r => parseInt(r.Rank)).filter(r => !isNaN(r));
+            const avgRank = ranks.length > 0 
+                ? (ranks.reduce((a,b) => a+b, 0) / ranks.length).toFixed(1)
+                : '-';
+            document.getElementById('statAvgRank').textContent = avgRank;
+
+            // Avg rating
+            const ratings = data.map(r => parseFloat(r.Rating)).filter(r => !isNaN(r));
+            const avgRating = ratings.length > 0
+                ? (ratings.reduce((a,b) => a+b, 0) / ratings.length).toFixed(1)
+                : '-';
+            document.getElementById('statAvgRating').textContent = avgRating;
+
+            // Total reviews
+            const reviews = data.map(r => parseInt(r.Reviews)).filter(r => !isNaN(r));
+            const totalReviews = reviews.reduce((a,b) => a+b, 0);
+            document.getElementById('statTotalReviews').textContent = 
+                totalReviews.toLocaleString();
+        }
+
+        function renderCharts(data) {
+            // Rank distribution
+            const rankBuckets = { '1': 0, '2-5': 0, '6-10': 0, '11-20': 0 };
+            data.forEach(r => {
+                const rank = parseInt(r.Rank);
+                if (rank === 1) rankBuckets['1']++;
+                else if (rank <= 5) rankBuckets['2-5']++;
+                else if (rank <= 10) rankBuckets['6-10']++;
+                else if (rank <= 20) rankBuckets['11-20']++;
+            });
+
+            if (charts.rankDist) charts.rankDist.destroy();
+            charts.rankDist = new Chart(document.getElementById('chartRankDist'), {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(rankBuckets),
+                    datasets: [{
+                        data: Object.values(rankBuckets),
+                        backgroundColor: ['#fbbf24', '#60a5fa', '#818cf8', '#9ca3af']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true
+                }
+            });
+
+            // Platform performance
+            const platformData = {};
+            data.forEach(r => {
+                if (!platformData[r.Platform]) {
+                    platformData[r.Platform] = { count: 0, totalRank: 0 };
+                }
+                platformData[r.Platform].count++;
+                platformData[r.Platform].totalRank += parseInt(r.Rank) || 0;
+            });
+
+            const platforms = Object.keys(platformData);
+            const avgRanks = platforms.map(p => 
+                (platformData[p].totalRank / platformData[p].count).toFixed(1)
+            );
+
+            if (charts.platform) charts.platform.destroy();
+            charts.platform = new Chart(document.getElementById('chartPlatform'), {
+                type: 'bar',
+                data: {
+                    labels: platforms,
+                    datasets: [{
+                        label: 'Avg Rank',
+                        data: avgRanks,
+                        backgroundColor: '#667eea'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        y: {
+                            reverse: true,
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Rank trend over time
+            renderRankTrendChart(data);
+        }
+
+        function renderRankTrendChart(data) {
+            const sortedData = [...data].sort((a,b) => 
+                new Date(a.Timestamp) - new Date(b.Timestamp)
+            );
+
+            const dates = [...new Set(sortedData.map(r => r.Timestamp.split(' ')[0]))];
+            const products = [...new Set(sortedData.map(r => r.Product))];
+
+            const datasets = products.map((product, idx) => {
+                const color = ['#667eea', '#764ba2', '#f59e0b', '#10b981'][idx % 4];
+                return {
+                    label: product,
+                    data: dates.map(date => {
+                        const records = sortedData.filter(r => 
+                            r.Product === product && r.Timestamp.startsWith(date)
+                        );
+                        if (records.length === 0) return null;
+                        const ranks = records.map(r => parseInt(r.Rank));
+                        return Math.min(...ranks);
+                    }),
+                    borderColor: color,
+                    backgroundColor: color,
+                    tension: 0.4
+                };
+            });
+
+            if (charts.rankTrend) charts.rankTrend.destroy();
+            charts.rankTrend = new Chart(document.getElementById('chartRankTrend'), {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        y: {
+                            reverse: true,
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderProductSummary() {
+            const tbody = document.getElementById('tableProductSummary');
+            tbody.innerHTML = '';
+
+            allData.products.forEach(product => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${product['Product Name']}</td>
+                    <td><span class="platform-badge platform-${product.Platform}">${product.Platform}</span></td>
+                    <td><span class="rank-badge rank-${getRankClass(product['Current Rank'])}">#${product['Current Rank']}</span></td>
+                    <td>₹${product['Current Price']}</td>
+                    <td><span class="rating">⭐ ${product.Rating}</span></td>
+                    <td>${product.Reviews}</td>
+                    <td>${product['Last Checked']}</td>
+                `;
+            });
+        }
+
+        function renderRankingsTable(data) {
+            const tbody = document.getElementById('tableRankings');
+            tbody.innerHTML = '';
+
+            data.slice(0, 50).forEach(record => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${record.Timestamp}</td>
+                    <td>${record.Product}</td>
+                    <td><span class="platform-badge platform-${record.Platform}">${record.Platform}</span></td>
+                    <td>${record.Keyword}</td>
+                    <td><span class="rank-badge rank-${getRankClass(record.Rank)}">#${record.Rank}</span></td>
+                    <td>₹${record.Price}</td>
+                    <td><span class="rating">⭐ ${record.Rating}</span></td>
+                    <td>${record.Reviews}</td>
+                    <td><a href="${record.URL}" target="_blank" class="product-link">View</a></td>
+                `;
+            });
+        }
+
+        function renderCompetitorsTable() {
+            const tbody = document.getElementById('tableCompetitors');
+            tbody.innerHTML = '';
+
+            const competitors = allData.competitors.slice(0, 50);
+            competitors.forEach(record => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${record.Timestamp}</td>
+                    <td><span class="platform-badge platform-${record.Platform}">${record.Platform}</span></td>
+                    <td>${record.Keyword}</td>
+                    <td><span class="rank-badge rank-${getRankClass(record.Rank)}">#${record.Rank}</span></td>
+                    <td>${record.Title}</td>
+                    <td>₹${record.Price}</td>
+                    <td><span class="rating">⭐ ${record.Rating}</span></td>
+                    <td>${record.Reviews}</td>
+                `;
+            });
+        }
+
+        function getRankClass(rank) {
+            rank = parseInt(rank);
+            if (rank === 1) return '1';
+            if (rank <= 5) return '2-5';
+            if (rank <= 10) return '6-10';
+            return '11-20';
+        }
+
+        // ====================================================================
+        // UI INTERACTIONS
+        // ====================================================================
+        function applyFilters() {
+            renderDashboard();
+        }
+
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
+
+        function exportToExcel() {
+            const wb = XLSX.utils.book_new();
+
+            // Export Rankings
+            const rankingsWS = XLSX.utils.json_to_sheet(allData.rankings);
+            XLSX.utils.book_append_sheet(wb, rankingsWS, 'Rankings');
+
+            // Export Competitors
+            const competitorsWS = XLSX.utils.json_to_sheet(allData.competitors);
+            XLSX.utils.book_append_sheet(wb, competitorsWS, 'Competitors');
+
+            // Export Products
+            const productsWS = XLSX.utils.json_to_sheet(allData.products);
+            XLSX.utils.book_append_sheet(wb, productsWS, 'Products');
+
+            // Download
+            const date = new Date().toISOString().split('T')[0];
+            XLSX.writeFile(wb, `ProductTrack_Export_${date}.xlsx`);
+        }
+    </script>
+</body>
+</html>
