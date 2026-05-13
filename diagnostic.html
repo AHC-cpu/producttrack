@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProductTrack - Diagnostic</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background: #5568d3;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 ProductTrack Diagnostic Tool</h1>
+    <p>This page will help us identify what's wrong with authentication.</p>
+
+    <div id="diagnostics"></div>
+
+    <hr style="margin: 30px 0;">
+
+    <h2>Google Sign-In</h2>
+    <div id="g_id_onload"
+         data-client_id="260112510191-v1apk72dk0srph3kg80afnc1ohu4hvtb.apps.googleusercontent.com"
+         data-callback="handleCredentialResponse">
+    </div>
+    <div class="g_id_signin" data-type="standard" data-size="large"></div>
+
+    <div id="result" style="margin-top: 20px;"></div>
+
+    <script>
+        const SHEET_ID = '1p7_1I_JE6TpH1QdQ8eOU9v7TSi4YvdoPrBGKOAHVQfo';
+        const CLIENT_ID = '260112510191-v1apk72dk0srph3kg80afnc1ohu4hvtb.apps.googleusercontent.com';
+
+        // Run diagnostics
+        window.addEventListener('load', function() {
+            runDiagnostics();
+        });
+
+        function addStatus(message, type) {
+            const div = document.getElementById('diagnostics');
+            div.innerHTML += `<div class="status ${type}">${message}</div>`;
+        }
+
+        function runDiagnostics() {
+            addStatus('✓ Page loaded successfully', 'success');
+            
+            // Check if GSI script loaded
+            setTimeout(() => {
+                if (typeof google !== 'undefined' && google.accounts) {
+                    addStatus('✓ Google Sign-In library loaded', 'success');
+                } else {
+                    addStatus('✗ Google Sign-In library NOT loaded', 'error');
+                    addStatus('→ Check internet connection or try refreshing', 'info');
+                }
+            }, 2000);
+
+            // Check configuration
+            if (SHEET_ID && SHEET_ID !== 'YOUR_SHEET_ID_HERE') {
+                addStatus(`✓ Sheet ID configured: ${SHEET_ID}`, 'success');
+            } else {
+                addStatus('✗ Sheet ID not configured', 'error');
+            }
+
+            if (CLIENT_ID && CLIENT_ID.includes('.apps.googleusercontent.com')) {
+                addStatus(`✓ Client ID configured: ${CLIENT_ID.substring(0, 20)}...`, 'success');
+            } else {
+                addStatus('✗ Client ID not configured correctly', 'error');
+            }
+
+            addStatus('ℹ Now try clicking the "Sign in with Google" button below', 'info');
+        }
+
+        function handleCredentialResponse(response) {
+            console.log('Got response:', response);
+            
+            if (response.credential) {
+                addStatus('✓ Authentication successful!', 'success');
+                document.getElementById('result').innerHTML = `
+                    <div class="status success">
+                        <strong>✓ Sign-in worked!</strong><br>
+                        Token received: ${response.credential.substring(0, 50)}...<br><br>
+                        <button class="btn" onclick="testSheetAccess('${response.credential}')">
+                            Test Google Sheets Access
+                        </button>
+                    </div>
+                `;
+            } else {
+                addStatus('✗ No credential received', 'error');
+            }
+        }
+
+        async function testSheetAccess(token) {
+            document.getElementById('result').innerHTML += `
+                <div class="status info">Testing Sheets API access...</div>
+            `;
+
+            try {
+                const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}`;
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('result').innerHTML += `
+                        <div class="status success">
+                            <strong>✓ Sheets access works!</strong><br>
+                            Sheet title: ${data.properties.title}<br>
+                            Number of tabs: ${data.sheets.length}<br><br>
+                            <strong>Everything is working! Your main dashboard should work now.</strong>
+                        </div>
+                    `;
+                } else {
+                    const error = await response.json();
+                    document.getElementById('result').innerHTML += `
+                        <div class="status error">
+                            <strong>✗ Sheets access failed</strong><br>
+                            Error: ${error.error.message}<br>
+                            Status: ${response.status}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML += `
+                    <div class="status error">
+                        <strong>✗ Network error</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Log any errors
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            addStatus(`✗ JavaScript Error: ${msg}`, 'error');
+            return false;
+        };
+    </script>
+</body>
+</html>
