@@ -401,19 +401,21 @@
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead style="background: #f8fafc;">
                             <tr>
-                                <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Timestamp</th>
+                                <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Date</th>
                                 <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Platform</th>
                                 <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Keyword</th>
                                 <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Rank</th>
                                 <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Product Title</th>
+                                <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">ASIN/FCID</th>
                                 <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Price</th>
                                 <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Rating</th>
                                 <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Reviews</th>
+                                <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Link</th>
                             </tr>
                         </thead>
                         <tbody id="competitorsTableBody">
                             <tr>
-                                <td colspan="8" style="padding: 2rem; text-align: center; color: #64748b;">
+                                <td colspan="10" style="padding: 2rem; text-align: center; color: #64748b;">
                                     No competitor data yet.
                                 </td>
                             </tr>
@@ -866,7 +868,7 @@
             if (allData.competitors.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="8" style="padding: 2rem; text-align: center; color: #64748b;">
+                        <td colspan="10" style="padding: 2rem; text-align: center; color: #64748b;">
                             No competitor data yet.
                         </td>
                     </tr>
@@ -875,22 +877,30 @@
                 const reversed = allData.competitors.slice().reverse();
                 tbody.innerHTML = reversed.map(c => `
                     <tr style="border-top: 1px solid #f1f5f9;">
-                        <td style="padding: 0.75rem; font-size: 0.85rem;">${c.Timestamp}</td>
+                        <td style="padding: 0.75rem; font-size: 0.85rem;">${c.Timestamp ? c.Timestamp.split(' ')[0] : 'N/A'}</td>
                         <td style="padding: 0.75rem;">
                             <span style="background: #fff7ed; color: #c2410c; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; font-weight: 500;">
-                                ${c.Platform.toUpperCase()}
+                                ${(c.Platform || 'N/A').toUpperCase()}
                             </span>
                         </td>
-                        <td style="padding: 0.75rem;">${c.Keyword}</td>
+                        <td style="padding: 0.75rem;">${c.Keyword || 'N/A'}</td>
                         <td style="padding: 0.75rem;">
                             <span style="background: ${getRankColor(c.Rank)}; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 600;">
-                                #${c.Rank}
+                                #${c.Rank || 'N/A'}
                             </span>
                         </td>
-                        <td style="padding: 0.75rem; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${c.Title}</td>
-                        <td style="padding: 0.75rem;">₹${c.Price}</td>
-                        <td style="padding: 0.75rem;">⭐ ${c.Rating}</td>
-                        <td style="padding: 0.75rem;">${c.Reviews}</td>
+                        <td style="padding: 0.75rem; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${c.Title || 'N/A'}">
+                            ${c.Title || 'N/A'}
+                        </td>
+                        <td style="padding: 0.75rem; font-family: monospace; font-size: 0.85rem;">
+                            ${c['ASIN/FCID'] || c.ASIN || c.FCID || 'N/A'}
+                        </td>
+                        <td style="padding: 0.75rem;">₹${c.Price || 'N/A'}</td>
+                        <td style="padding: 0.75rem;">⭐ ${c.Rating || 'N/A'}</td>
+                        <td style="padding: 0.75rem;">${c.Reviews || '0'}</td>
+                        <td style="padding: 0.75rem;">
+                            ${c.URL ? `<a href="${c.URL}" target="_blank" style="color: #667eea; text-decoration: none;">🔗 View</a>` : 'N/A'}
+                        </td>
                     </tr>
                 `).join('');
             }
