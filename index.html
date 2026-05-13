@@ -418,7 +418,7 @@
                 });
                 
                 const hasProductConfig = response.result.sheets.some(
-                    sheet => sheet.properties.title === 'ProductConfig'
+                    sheet => sheet.properties.title === 'Products'
                 );
                 
                 if (!hasProductConfig) {
@@ -428,7 +428,7 @@
                             requests: [{
                                 addSheet: {
                                     properties: {
-                                        title: 'ProductConfig',
+                                        title: 'Products',
                                         gridProperties: { rowCount: 1000, columnCount: 10 }
                                     }
                                 }
@@ -439,7 +439,7 @@
                     const headers = ['Platform', 'Product ID', 'Product Name', 'Keywords', 'Status', 'Added Date'];
                     await gapi.client.sheets.spreadsheets.values.update({
                         spreadsheetId: APP_CONFIG.SHEET_ID,
-                        range: 'ProductConfig!A1:F1',
+                        range: 'Products!A1:F1',
                         valueInputOption: 'USER_ENTERED',
                         resource: {
                             values: [headers]
@@ -447,7 +447,8 @@
                     });
                 }
             } catch (error) {
-                console.error('Error ensuring ProductConfig sheet:', error);
+                console.error('Error ensuring Products sheet:', error);
+                throw error;
             }
         }
 
@@ -455,7 +456,7 @@
             try {
                 const response = await gapi.client.sheets.spreadsheets.values.get({
                     spreadsheetId: APP_CONFIG.SHEET_ID,
-                    range: 'ProductConfig!A:F',
+                    range: 'Products!A:F',
                 });
 
                 const data = response.result.values;
@@ -499,7 +500,7 @@
 
                 await gapi.client.sheets.spreadsheets.values.append({
                     spreadsheetId: APP_CONFIG.SHEET_ID,
-                    range: 'ProductConfig!A:F',
+                    range: 'Products!A:F',
                     valueInputOption: 'USER_ENTERED',
                     resource: {
                         values: [newProduct]
@@ -566,7 +567,7 @@
                 
                 await gapi.client.sheets.spreadsheets.values.update({
                     spreadsheetId: APP_CONFIG.SHEET_ID,
-                    range: `ProductConfig!E${rowNumber}`,
+                    range: `Products!E${rowNumber}`,
                     valueInputOption: 'USER_ENTERED',
                     resource: {
                         values: [['Deleted']]
