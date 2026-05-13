@@ -465,15 +465,29 @@
                 });
 
                 const data = response.result.values;
+                console.log('Raw rankings data:', data);
+                
                 if (data && data.length > 1) {
                     const headers = data[0];
+                    console.log('Rankings headers:', headers);
+                    
                     const rows = data.slice(1);
                     allData.rankings = rows.map(row => {
-                        const obj = {};
-                        headers.forEach((header, index) => {
-                            obj[header] = row[index] || '';
-                        });
-                        return obj;
+                        // Create object with both possible column name formats
+                        return {
+                            'Timestamp': row[0] || '',
+                            'Platform': row[1] || '',
+                            'Product': row[2] || '',
+                            'ASIN/FCID': row[3] || '',
+                            'ProductID': row[3] || '', // alias
+                            'Keyword': row[4] || '',
+                            'Rank': row[5] || '',
+                            'Title': row[6] || '',
+                            'Price': row[7] || '',
+                            'Rating': row[8] || '',
+                            'Reviews': row[9] || '',
+                            'URL': row[10] || ''
+                        };
                     });
                 }
                 console.log(`Loaded ${allData.rankings.length} rankings`);
