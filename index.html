@@ -260,6 +260,8 @@
         <div class="tabs">
             <button class="tab active" onclick="switchTab('products')">Manage Products</button>
             <button class="tab" onclick="switchTab('overview')">Overview</button>
+            <button class="tab" onclick="switchTab('rankings')">Rankings</button>
+            <button class="tab" onclick="switchTab('competitors')">Competitors</button>
         </div>
 
         <!-- Tab: Manage Products -->
@@ -345,6 +347,74 @@
                             <tr>
                                 <td colspan="6" style="padding: 2rem; text-align: center; color: #64748b;">
                                     No ranking data yet. Run the scraper to collect data.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Rankings -->
+        <div id="tab-rankings" class="tab-content">
+            <div class="product-manager">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2>All Rankings</h2>
+                    <button class="btn btn-success" onclick="exportRankings()">📥 Export to Excel</button>
+                </div>
+                
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead style="background: #f8fafc;">
+                            <tr>
+                                <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Timestamp</th>
+                                <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Platform</th>
+                                <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Product</th>
+                                <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Keyword</th>
+                                <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Rank</th>
+                                <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Price</th>
+                                <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Rating</th>
+                                <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Reviews</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rankingsTableBody">
+                            <tr>
+                                <td colspan="8" style="padding: 2rem; text-align: center; color: #64748b;">
+                                    No ranking data yet.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Competitors -->
+        <div id="tab-competitors" class="tab-content">
+            <div class="product-manager">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2>Competitor Analysis</h2>
+                    <button class="btn btn-success" onclick="exportCompetitors()">📥 Export to Excel</button>
+                </div>
+                
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead style="background: #f8fafc;">
+                            <tr>
+                                <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Timestamp</th>
+                                <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Platform</th>
+                                <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Keyword</th>
+                                <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Rank</th>
+                                <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Product Title</th>
+                                <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Price</th>
+                                <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Rating</th>
+                                <th style="padding: 0.75rem; text-align: left; font-size: 0.85rem; color: #64748b;">Reviews</th>
+                            </tr>
+                        </thead>
+                        <tbody id="competitorsTableBody">
+                            <tr>
+                                <td colspan="8" style="padding: 2rem; text-align: center; color: #64748b;">
+                                    No competitor data yet.
                                 </td>
                             </tr>
                         </tbody>
@@ -756,12 +826,126 @@
             }
         }
 
+        function renderRankings() {
+            const tbody = document.getElementById('rankingsTableBody');
+            if (allData.rankings.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="padding: 2rem; text-align: center; color: #64748b;">
+                            No ranking data yet.
+                        </td>
+                    </tr>
+                `;
+            } else {
+                const reversed = allData.rankings.slice().reverse();
+                tbody.innerHTML = reversed.map(r => `
+                    <tr style="border-top: 1px solid #f1f5f9;">
+                        <td style="padding: 0.75rem; font-size: 0.85rem;">${r.Timestamp}</td>
+                        <td style="padding: 0.75rem;">
+                            <span style="background: #fff7ed; color: #c2410c; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; font-weight: 500;">
+                                ${r.Platform.toUpperCase()}
+                            </span>
+                        </td>
+                        <td style="padding: 0.75rem; font-weight: 500;">${r.Product}</td>
+                        <td style="padding: 0.75rem;">${r.Keyword}</td>
+                        <td style="padding: 0.75rem;">
+                            <span style="background: ${getRankColor(r.Rank)}; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 600;">
+                                #${r.Rank}
+                            </span>
+                        </td>
+                        <td style="padding: 0.75rem;">₹${r.Price}</td>
+                        <td style="padding: 0.75rem;">⭐ ${r.Rating}</td>
+                        <td style="padding: 0.75rem;">${r.Reviews}</td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function renderCompetitors() {
+            const tbody = document.getElementById('competitorsTableBody');
+            if (allData.competitors.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="padding: 2rem; text-align: center; color: #64748b;">
+                            No competitor data yet.
+                        </td>
+                    </tr>
+                `;
+            } else {
+                const reversed = allData.competitors.slice().reverse();
+                tbody.innerHTML = reversed.map(c => `
+                    <tr style="border-top: 1px solid #f1f5f9;">
+                        <td style="padding: 0.75rem; font-size: 0.85rem;">${c.Timestamp}</td>
+                        <td style="padding: 0.75rem;">
+                            <span style="background: #fff7ed; color: #c2410c; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; font-weight: 500;">
+                                ${c.Platform.toUpperCase()}
+                            </span>
+                        </td>
+                        <td style="padding: 0.75rem;">${c.Keyword}</td>
+                        <td style="padding: 0.75rem;">
+                            <span style="background: ${getRankColor(c.Rank)}; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 600;">
+                                #${c.Rank}
+                            </span>
+                        </td>
+                        <td style="padding: 0.75rem; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${c.Title}</td>
+                        <td style="padding: 0.75rem;">₹${c.Price}</td>
+                        <td style="padding: 0.75rem;">⭐ ${c.Rating}</td>
+                        <td style="padding: 0.75rem;">${c.Reviews}</td>
+                    </tr>
+                `).join('');
+            }
+        }
+
         function getRankColor(rank) {
             const r = parseInt(rank);
             if (r === 1) return '#fef3c7';
             if (r <= 5) return '#dbeafe';
             if (r <= 10) return '#e0e7ff';
             return '#f3f4f6';
+        }
+
+        function exportRankings() {
+            if (allData.rankings.length === 0) {
+                alert('No ranking data to export');
+                return;
+            }
+            
+            const csv = [
+                ['Timestamp', 'Platform', 'Product', 'ASIN/FCID', 'Keyword', 'Rank', 'Title', 'Price', 'Rating', 'Reviews', 'URL'],
+                ...allData.rankings.map(r => [
+                    r.Timestamp, r.Platform, r.Product, r['ASIN/FCID'], r.Keyword, 
+                    r.Rank, r.Title, r.Price, r.Rating, r.Reviews, r.URL
+                ])
+            ].map(row => row.join(',')).join('\n');
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `rankings_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+        }
+
+        function exportCompetitors() {
+            if (allData.competitors.length === 0) {
+                alert('No competitor data to export');
+                return;
+            }
+            
+            const csv = [
+                ['Timestamp', 'Platform', 'Keyword', 'Rank', 'Title', 'ASIN/FCID', 'Price', 'Rating', 'Reviews', 'URL'],
+                ...allData.competitors.map(c => [
+                    c.Timestamp, c.Platform, c.Keyword, c.Rank, c.Title, 
+                    c['ASIN/FCID'], c.Price, c.Rating, c.Reviews, c.URL
+                ])
+            ].map(row => row.join(',')).join('\n');
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `competitors_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
         }
 
         function switchTab(tabName) {
@@ -774,6 +958,13 @@
                 content.classList.remove('active');
             });
             document.getElementById(`tab-${tabName}`).classList.add('active');
+            
+            // Render data when switching to tabs
+            if (tabName === 'rankings') {
+                renderRankings();
+            } else if (tabName === 'competitors') {
+                renderCompetitors();
+            }
         }
     </script>
     <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
