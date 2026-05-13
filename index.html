@@ -334,26 +334,46 @@
         // ====================================================================
         // INITIALIZATION
         // ====================================================================
+        let gapiInited = false;
+        let gisInited = false;
+
         function gapiLoaded() {
             gapi.load('client', initializeGapiClient);
         }
 
         async function initializeGapiClient() {
-            await gapi.client.init({
-                apiKey: 'AIzaSyDummyKeyForInitOnly',
-                discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
-            });
-            gisLoaded();
+            try {
+                await gapi.client.init({
+                    discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
+                });
+                gapiInited = true;
+                maybeEnableButtons();
+            } catch (error) {
+                console.error('Error initializing gapi:', error);
+                document.getElementById('authLoading').innerHTML = '<p style="color: #ef4444;">Failed to initialize. Please refresh the page.</p>';
+            }
         }
 
         function gisLoaded() {
-            tokenClient = google.accounts.oauth2.initTokenClient({
-                client_id: APP_CONFIG.CLIENT_ID,
-                scope: APP_CONFIG.SCOPES,
-                callback: '',
-            });
-            document.getElementById('authLoading').style.display = 'none';
-            document.getElementById('authorizeButton').style.display = 'inline-block';
+            try {
+                tokenClient = google.accounts.oauth2.initTokenClient({
+                    client_id: APP_CONFIG.CLIENT_ID,
+                    scope: APP_CONFIG.SCOPES,
+                    callback: '',
+                });
+                gisInited = true;
+                maybeEnableButtons();
+            } catch (error) {
+                console.error('Error initializing GIS:', error);
+                document.getElementById('authLoading').innerHTML = '<p style="color: #ef4444;">Failed to initialize. Please refresh the page.</p>';
+            }
+        }
+
+        function maybeEnableButtons() {
+            if (gapiInited && gisInited) {
+                document.getElementById('authLoading').style.display = 'none';
+                document.getElementById('authorizeButton').style.display = 'inline-block';
+            }
         }
 
         // ====================================================================
