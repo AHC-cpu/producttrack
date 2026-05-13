@@ -96,17 +96,25 @@
             color: white;
         }
 
-        .btn-danger:hover {
-            background: #dc2626;
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #64748b;
         }
 
-        .btn-secondary {
-            background: #6b7280;
-            color: white;
+        .spinner {
+            border: 3px solid #f1f5f9;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
         }
 
-        .btn-secondary:hover {
-            background: #4b5563;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .tabs {
@@ -132,10 +140,6 @@
             border-bottom-color: #667eea;
         }
 
-        .tab:hover {
-            color: #667eea;
-        }
-
         .tab-content {
             display: none;
         }
@@ -149,18 +153,6 @@
             padding: 2rem;
             border-radius: 12px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            margin-bottom: 2rem;
-        }
-
-        .product-manager h2 {
-            margin-bottom: 1.5rem;
-            color: #1e293b;
-        }
-
-        .product-form {
-            background: #f8fafc;
-            padding: 1.5rem;
-            border-radius: 8px;
             margin-bottom: 2rem;
         }
 
@@ -191,10 +183,20 @@
             font-size: 0.95rem;
         }
 
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #667eea;
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
         }
 
         .product-list {
@@ -207,64 +209,17 @@
             border-radius: 8px;
             padding: 1.5rem;
             margin-bottom: 1rem;
-            transition: all 0.2s;
-        }
-
-        .product-card:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .product-card-header {
             display: flex;
             justify-content: space-between;
-            align-items: start;
             margin-bottom: 1rem;
         }
 
         .product-card-title {
             font-size: 1.1rem;
             font-weight: 600;
-            color: #1e293b;
-        }
-
-        .product-card-platform {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .platform-amazon {
-            background: #fff7ed;
-            color: #c2410c;
-        }
-
-        .platform-firstcry {
-            background: #fef2f2;
-            color: #b91c1c;
-        }
-
-        .product-card-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .product-detail {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .product-detail-label {
-            font-size: 0.85rem;
-            color: #64748b;
-            margin-bottom: 0.25rem;
-        }
-
-        .product-detail-value {
-            font-weight: 500;
             color: #1e293b;
         }
 
@@ -282,138 +237,6 @@
             border-radius: 12px;
             font-size: 0.85rem;
         }
-
-        .product-card-actions {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-header h3 {
-            color: #1e293b;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #64748b;
-        }
-
-        .alert {
-            padding: 1rem;
-            border-radius: 6px;
-            margin-bottom: 1rem;
-        }
-
-        .alert-success {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        .alert-error {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        .alert-info {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 3rem;
-            color: #64748b;
-        }
-
-        .spinner {
-            border: 3px solid #f1f5f9;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        .stat-card h3 {
-            font-size: 0.85rem;
-            color: #64748b;
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #1e293b;
-        }
-
-        @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .product-card-details {
-                grid-template-columns: 1fr;
-            }
-        }
     </style>
 </head>
 <body>
@@ -425,11 +248,11 @@
     <div id="authSection" class="auth-section">
         <h2>Connect to Google Sheets</h2>
         <p style="margin-bottom: 2rem; color: #64748b;">Sign in with Google to access your product data</p>
-        <div id="g_id_onload"
-             data-client_id="260112510191-v1apk72dk0srph3kg80afnc1ohu4hvtb.apps.googleusercontent.com"
-             data-callback="handleCredentialResponse">
+        <button id="authorizeButton" class="btn btn-primary" style="display: none;">Sign in with Google</button>
+        <div class="loading" id="authLoading">
+            <div class="spinner"></div>
+            <p>Initializing...</p>
         </div>
-        <div class="g_id_signin" data-type="standard" data-size="large"></div>
     </div>
 
     <div id="appContainer" class="container" style="display: none;">
@@ -437,8 +260,6 @@
         <div class="tabs">
             <button class="tab active" onclick="switchTab('products')">Manage Products</button>
             <button class="tab" onclick="switchTab('overview')">Overview</button>
-            <button class="tab" onclick="switchTab('rankings')">Rankings</button>
-            <button class="tab" onclick="switchTab('competitors')">Competitors</button>
         </div>
 
         <!-- Tab: Manage Products -->
@@ -448,7 +269,7 @@
                 
                 <div id="productAlert"></div>
 
-                <div class="product-form">
+                <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
                     <h3 style="margin-bottom: 1rem;">Add New Product</h3>
                     <div class="form-row">
                         <div class="form-group">
@@ -485,129 +306,11 @@
 
         <!-- Tab: Overview -->
         <div id="tab-overview" class="tab-content">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h3>Total Products Tracked</h3>
-                    <div class="stat-value" id="statTotalProducts">0</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Avg. Rank Position</h3>
-                    <div class="stat-value" id="statAvgRank">-</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Avg. Rating</h3>
-                    <div class="stat-value" id="statAvgRating">-</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Total Reviews</h3>
-                    <div class="stat-value" id="statTotalReviews">0</div>
-                </div>
-            </div>
-
-            <div style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+            <div class="product-manager">
                 <h3>Product Summary</h3>
-                <div style="overflow-x: auto; margin-top: 1rem;">
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <thead style="background: #f8fafc;">
-                            <tr>
-                                <th style="padding: 1rem; text-align: left;">Product</th>
-                                <th style="padding: 1rem; text-align: left;">Platform</th>
-                                <th style="padding: 1rem; text-align: left;">Best Rank</th>
-                                <th style="padding: 1rem; text-align: left;">Price</th>
-                                <th style="padding: 1rem; text-align: left;">Rating</th>
-                                <th style="padding: 1rem; text-align: left;">Reviews</th>
-                                <th style="padding: 1rem; text-align: left;">Last Checked</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tableProductSummary"></tbody>
-                    </table>
+                <div id="overviewContent" style="margin-top: 1rem;">
+                    <p style="color: #64748b;">Add products and run the scraper to see analytics here.</p>
                 </div>
-            </div>
-        </div>
-
-        <!-- Tab: Rankings -->
-        <div id="tab-rankings" class="tab-content">
-            <div style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                    <h3>Recent Rankings</h3>
-                    <button class="btn btn-success" onclick="exportToExcel()">📥 Export to Excel</button>
-                </div>
-                <div style="overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <thead style="background: #f8fafc;">
-                            <tr>
-                                <th style="padding: 1rem; text-align: left;">Date</th>
-                                <th style="padding: 1rem; text-align: left;">Product</th>
-                                <th style="padding: 1rem; text-align: left;">Platform</th>
-                                <th style="padding: 1rem; text-align: left;">Keyword</th>
-                                <th style="padding: 1rem; text-align: left;">Rank</th>
-                                <th style="padding: 1rem; text-align: left;">Price</th>
-                                <th style="padding: 1rem; text-align: left;">Rating</th>
-                                <th style="padding: 1rem; text-align: left;">Reviews</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tableRankings"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tab: Competitors -->
-        <div id="tab-competitors" class="tab-content">
-            <div style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
-                <h3 style="margin-bottom: 1rem;">Competitor Analysis</h3>
-                <div style="overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <thead style="background: #f8fafc;">
-                            <tr>
-                                <th style="padding: 1rem; text-align: left;">Date</th>
-                                <th style="padding: 1rem; text-align: left;">Platform</th>
-                                <th style="padding: 1rem; text-align: left;">Keyword</th>
-                                <th style="padding: 1rem; text-align: left;">Rank</th>
-                                <th style="padding: 1rem; text-align: left;">Product Title</th>
-                                <th style="padding: 1rem; text-align: left;">Price</th>
-                                <th style="padding: 1rem; text-align: left;">Rating</th>
-                                <th style="padding: 1rem; text-align: left;">Reviews</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tableCompetitors"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Edit Product Modal -->
-    <div id="editModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Edit Product</h3>
-                <button class="close-modal" onclick="closeEditModal()">&times;</button>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Platform</label>
-                    <select id="editPlatform">
-                        <option value="amazon">Amazon</option>
-                        <option value="firstcry">Firstcry</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Product ID (ASIN/FCID)</label>
-                    <input type="text" id="editProductId">
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Product Name</label>
-                <input type="text" id="editProductName">
-            </div>
-            <div class="form-group">
-                <label>Keywords (comma-separated)</label>
-                <input type="text" id="editKeywords">
-            </div>
-            <div style="display: flex; gap: 0.5rem; margin-top: 1.5rem;">
-                <button class="btn btn-primary" onclick="saveEditProduct()">💾 Save Changes</button>
-                <button class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
             </div>
         </div>
     </div>
@@ -618,103 +321,90 @@
         // ====================================================================
         const APP_CONFIG = {
             SHEET_ID: '1p7_1I_JE6TpH1QdQ8eOU9v7TSi4YvdoPrBGKOAHVQfo',
-            CLIENT_ID: '260112510191-v1apk72dk0srph3kg80afnc1ohu4hvtb.apps.googleusercontent.com'
+            CLIENT_ID: '260112510191-v1apk72dk0srph3kg80afnc1ohu4hvtb.apps.googleusercontent.com',
+            SCOPES: 'https://www.googleapis.com/auth/spreadsheets'
         };
 
+        let tokenClient;
         let accessToken = null;
         let allData = {
-            rankings: [],
-            competitors: [],
             products: []
         };
-        let currentEditIndex = null;
+
+        // ====================================================================
+        // INITIALIZATION
+        // ====================================================================
+        function gapiLoaded() {
+            gapi.load('client', initializeGapiClient);
+        }
+
+        async function initializeGapiClient() {
+            await gapi.client.init({
+                apiKey: 'AIzaSyDummyKeyForInitOnly',
+                discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
+            });
+            gisLoaded();
+        }
+
+        function gisLoaded() {
+            tokenClient = google.accounts.oauth2.initTokenClient({
+                client_id: APP_CONFIG.CLIENT_ID,
+                scope: APP_CONFIG.SCOPES,
+                callback: '',
+            });
+            document.getElementById('authLoading').style.display = 'none';
+            document.getElementById('authorizeButton').style.display = 'inline-block';
+        }
 
         // ====================================================================
         // AUTHENTICATION
         // ====================================================================
-        function handleCredentialResponse(response) {
-            accessToken = response.credential;
-            document.getElementById('authSection').style.display = 'none';
-            document.getElementById('appContainer').style.display = 'block';
-            loadData();
-        }
+        document.getElementById('authorizeButton').onclick = function() {
+            tokenClient.callback = async (response) => {
+                if (response.error !== undefined) {
+                    throw (response);
+                }
+                accessToken = response.access_token;
+                document.getElementById('authSection').style.display = 'none';
+                document.getElementById('appContainer').style.display = 'block';
+                await loadData();
+            };
+
+            if (accessToken === null) {
+                tokenClient.requestAccessToken({prompt: 'consent'});
+            } else {
+                tokenClient.requestAccessToken({prompt: ''});
+            }
+        };
 
         // ====================================================================
         // DATA LOADING
         // ====================================================================
         async function loadData() {
-            showLoading();
             try {
-                await Promise.all([
-                    loadSheet('Rankings', 'rankings'),
-                    loadSheet('Competitors', 'competitors'),
-                    loadSheet('ProductConfig', 'products')
-                ]);
+                await ensureProductConfigSheet();
+                await loadProducts();
                 renderProducts();
-                renderDashboard();
             } catch (error) {
                 console.error('Error loading data:', error);
-                showAlert('Failed to load data. Please refresh and try again.', 'error');
+                showAlert('Failed to load data: ' + error.message, 'error');
             }
         }
 
-        async function loadSheet(sheetName, dataKey) {
-            const range = `${sheetName}!A:Z`;
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${APP_CONFIG.SHEET_ID}/values/${range}`;
-            
-            const response = await fetch(url, {
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            });
-
-            const data = await response.json();
-            if (data.values && data.values.length > 1) {
-                const headers = data.values[0];
-                const rows = data.values.slice(1);
-                allData[dataKey] = rows.map(row => {
-                    const obj = {};
-                    headers.forEach((header, index) => {
-                        obj[header] = row[index] || '';
-                    });
-                    return obj;
-                });
-            }
-        }
-
-        function showLoading() {
-            document.getElementById('appContainer').innerHTML = `
-                <div class="loading">
-                    <div class="spinner"></div>
-                    <p>Loading your product data...</p>
-                </div>
-            `;
-        }
-
-        // ====================================================================
-        // PRODUCT MANAGEMENT
-        // ====================================================================
         async function ensureProductConfigSheet() {
             try {
-                // Check if ProductConfig sheet exists
-                const url = `https://sheets.googleapis.com/v4/spreadsheets/${APP_CONFIG.SHEET_ID}`;
-                const response = await fetch(url, {
-                    headers: { 'Authorization': `Bearer ${accessToken}` }
+                const response = await gapi.client.sheets.spreadsheets.get({
+                    spreadsheetId: APP_CONFIG.SHEET_ID
                 });
-                const data = await response.json();
                 
-                const hasProductConfig = data.sheets.some(sheet => sheet.properties.title === 'ProductConfig');
+                const hasProductConfig = response.result.sheets.some(
+                    sheet => sheet.properties.title === 'ProductConfig'
+                );
                 
                 if (!hasProductConfig) {
-                    // Create ProductConfig sheet
-                    const createUrl = `https://sheets.googleapis.com/v4/spreadsheets/${APP_CONFIG.SHEET_ID}:batchUpdate`;
-                    await fetch(createUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${accessToken}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
+                    await gapi.client.sheets.spreadsheets.batchUpdate({
+                        spreadsheetId: APP_CONFIG.SHEET_ID,
+                        resource: {
                             requests: [{
                                 addSheet: {
                                     properties: {
@@ -723,40 +413,47 @@
                                     }
                                 }
                             }]
-                        })
+                        }
                     });
                     
-                    // Add headers
                     const headers = ['Platform', 'Product ID', 'Product Name', 'Keywords', 'Status', 'Added Date'];
-                    await updateSheetData('ProductConfig!A1:F1', [headers]);
+                    await gapi.client.sheets.spreadsheets.values.update({
+                        spreadsheetId: APP_CONFIG.SHEET_ID,
+                        range: 'ProductConfig!A1:F1',
+                        valueInputOption: 'USER_ENTERED',
+                        resource: {
+                            values: [headers]
+                        }
+                    });
                 }
             } catch (error) {
                 console.error('Error ensuring ProductConfig sheet:', error);
             }
         }
 
-        async function updateSheetData(range, values) {
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${APP_CONFIG.SHEET_ID}/values/${range}?valueInputOption=USER_ENTERED`;
-            await fetch(url, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ values: values })
-            });
-        }
+        async function loadProducts() {
+            try {
+                const response = await gapi.client.sheets.spreadsheets.values.get({
+                    spreadsheetId: APP_CONFIG.SHEET_ID,
+                    range: 'ProductConfig!A:F',
+                });
 
-        async function appendSheetData(range, values) {
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${APP_CONFIG.SHEET_ID}/values/${range}:append?valueInputOption=USER_ENTERED`;
-            await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ values: values })
-            });
+                const data = response.result.values;
+                if (data && data.length > 1) {
+                    const headers = data[0];
+                    const rows = data.slice(1);
+                    allData.products = rows.map(row => {
+                        const obj = {};
+                        headers.forEach((header, index) => {
+                            obj[header] = row[index] || '';
+                        });
+                        return obj;
+                    }).filter(p => p.Status !== 'Deleted');
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+                allData.products = [];
+            }
         }
 
         async function addProduct() {
@@ -771,8 +468,6 @@
             }
 
             try {
-                await ensureProductConfigSheet();
-                
                 const newProduct = [
                     platform,
                     productId,
@@ -782,21 +477,26 @@
                     new Date().toISOString().split('T')[0]
                 ];
 
-                await appendSheetData('ProductConfig!A:F', [newProduct]);
+                await gapi.client.sheets.spreadsheets.values.append({
+                    spreadsheetId: APP_CONFIG.SHEET_ID,
+                    range: 'ProductConfig!A:F',
+                    valueInputOption: 'USER_ENTERED',
+                    resource: {
+                        values: [newProduct]
+                    }
+                });
 
-                // Clear form
                 document.getElementById('newProductId').value = '';
                 document.getElementById('newProductName').value = '';
                 document.getElementById('newKeywords').value = '';
 
-                showAlert('Product added successfully!', 'success');
+                showAlert('✓ Product added successfully!', 'success');
                 
-                // Reload products
-                await loadSheet('ProductConfig', 'products');
+                await loadProducts();
                 renderProducts();
             } catch (error) {
                 console.error('Error adding product:', error);
-                showAlert('Failed to add product. Please try again.', 'error');
+                showAlert('Failed to add product: ' + error.message, 'error');
             }
         }
 
@@ -815,98 +515,27 @@
             container.innerHTML = allData.products.map((product, index) => `
                 <div class="product-card">
                     <div class="product-card-header">
-                        <div>
-                            <div class="product-card-title">${product['Product Name'] || 'Unnamed Product'}</div>
-                            <span class="product-card-platform platform-${product.Platform || 'amazon'}">
-                                ${(product.Platform || 'amazon').toUpperCase()}
-                            </span>
-                        </div>
+                        <div class="product-card-title">${product['Product Name'] || 'Unnamed Product'}</div>
+                        <span style="padding: 0.25rem 0.75rem; background: #fff7ed; color: #c2410c; border-radius: 12px; font-size: 0.85rem; font-weight: 500;">
+                            ${(product.Platform || 'amazon').toUpperCase()}
+                        </span>
                     </div>
-                    <div class="product-card-details">
-                        <div class="product-detail">
-                            <span class="product-detail-label">Product ID</span>
-                            <span class="product-detail-value">${product['Product ID'] || 'N/A'}</span>
-                        </div>
-                        <div class="product-detail">
-                            <span class="product-detail-label">Status</span>
-                            <span class="product-detail-value">${product.Status || 'Active'}</span>
-                        </div>
-                        <div class="product-detail">
-                            <span class="product-detail-label">Added</span>
-                            <span class="product-detail-value">${product['Added Date'] || 'N/A'}</span>
-                        </div>
+                    <div style="margin: 0.5rem 0;">
+                        <strong>Product ID:</strong> ${product['Product ID'] || 'N/A'}
                     </div>
                     <div>
-                        <span class="product-detail-label">Keywords:</span>
+                        <strong>Keywords:</strong>
                         <div class="keyword-tags">
                             ${(product.Keywords || '').split(',').map(k => 
                                 `<span class="keyword-tag">${k.trim()}</span>`
                             ).join('')}
                         </div>
                     </div>
-                    <div class="product-card-actions">
-                        <button class="btn btn-primary" onclick="editProduct(${index})">✏️ Edit</button>
+                    <div style="margin-top: 1rem;">
                         <button class="btn btn-danger" onclick="deleteProduct(${index})">🗑️ Delete</button>
                     </div>
                 </div>
             `).join('');
-        }
-
-        function editProduct(index) {
-            currentEditIndex = index;
-            const product = allData.products[index];
-            
-            document.getElementById('editPlatform').value = product.Platform || 'amazon';
-            document.getElementById('editProductId').value = product['Product ID'] || '';
-            document.getElementById('editProductName').value = product['Product Name'] || '';
-            document.getElementById('editKeywords').value = product.Keywords || '';
-            
-            document.getElementById('editModal').classList.add('active');
-        }
-
-        function closeEditModal() {
-            document.getElementById('editModal').classList.remove('active');
-            currentEditIndex = null;
-        }
-
-        async function saveEditProduct() {
-            if (currentEditIndex === null) return;
-
-            const platform = document.getElementById('editPlatform').value;
-            const productId = document.getElementById('editProductId').value.trim();
-            const productName = document.getElementById('editProductName').value.trim();
-            const keywords = document.getElementById('editKeywords').value.trim();
-
-            if (!productId || !productName || !keywords) {
-                showAlert('Please fill in all fields', 'error');
-                return;
-            }
-
-            try {
-                const rowNumber = currentEditIndex + 2; // +2 because: +1 for header, +1 for 1-indexed
-                const range = `ProductConfig!A${rowNumber}:F${rowNumber}`;
-                
-                const updatedProduct = [
-                    platform,
-                    productId,
-                    productName,
-                    keywords,
-                    allData.products[currentEditIndex].Status || 'Active',
-                    allData.products[currentEditIndex]['Added Date'] || new Date().toISOString().split('T')[0]
-                ];
-
-                await updateSheetData(range, [updatedProduct]);
-
-                showAlert('Product updated successfully!', 'success');
-                closeEditModal();
-                
-                // Reload products
-                await loadSheet('ProductConfig', 'products');
-                renderProducts();
-            } catch (error) {
-                console.error('Error updating product:', error);
-                showAlert('Failed to update product. Please try again.', 'error');
-            }
         }
 
         async function deleteProduct(index) {
@@ -915,19 +544,22 @@
             try {
                 const rowNumber = index + 2;
                 
-                // Mark as deleted by updating status
-                const range = `ProductConfig!E${rowNumber}`;
-                await updateSheetData(range, [['Deleted']]);
+                await gapi.client.sheets.spreadsheets.values.update({
+                    spreadsheetId: APP_CONFIG.SHEET_ID,
+                    range: `ProductConfig!E${rowNumber}`,
+                    valueInputOption: 'USER_ENTERED',
+                    resource: {
+                        values: [['Deleted']]
+                    }
+                });
 
-                showAlert('Product deleted successfully!', 'success');
+                showAlert('✓ Product deleted successfully!', 'success');
                 
-                // Reload products
-                await loadSheet('ProductConfig', 'products');
-                allData.products = allData.products.filter(p => p.Status !== 'Deleted');
+                await loadProducts();
                 renderProducts();
             } catch (error) {
                 console.error('Error deleting product:', error);
-                showAlert('Failed to delete product. Please try again.', 'error');
+                showAlert('Failed to delete product: ' + error.message, 'error');
             }
         }
 
@@ -939,47 +571,19 @@
             }, 5000);
         }
 
-        // ====================================================================
-        // DASHBOARD RENDERING
-        // ====================================================================
-        function renderDashboard() {
-            // Render stats
-            document.getElementById('statTotalProducts').textContent = allData.products.length;
-
-            // Render tables (simplified for now)
-            const summaryTbody = document.getElementById('tableProductSummary');
-            if (allData.products.length > 0) {
-                summaryTbody.innerHTML = allData.products.map(p => `
-                    <tr>
-                        <td style="padding: 1rem;">${p['Product Name']}</td>
-                        <td style="padding: 1rem;">${p.Platform}</td>
-                        <td style="padding: 1rem;">-</td>
-                        <td style="padding: 1rem;">-</td>
-                        <td style="padding: 1rem;">-</td>
-                        <td style="padding: 1rem;">-</td>
-                        <td style="padding: 1rem;">-</td>
-                    </tr>
-                `).join('');
-            }
-        }
-
         function switchTab(tabName) {
-            // Update tab buttons
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.classList.remove('active');
             });
             event.target.classList.add('active');
 
-            // Update tab content
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');
             });
             document.getElementById(`tab-${tabName}`).classList.add('active');
         }
-
-        function exportToExcel() {
-            alert('Export functionality coming soon!');
-        }
     </script>
+    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
 </body>
 </html>
